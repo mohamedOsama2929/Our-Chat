@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "458036563594",
+    "firebase_url": "https://mr-chat-59a2b.firebaseio.com",
+    "project_id": "mr-chat-59a2b",
+    "storage_bucket": "mr-chat-59a2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458036563594:android:e835ef762415b8c958a773",
+        "android_client_info": {
+          "package_name": "com.example.ososchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458036563594-lmr511e795g8l5c5bd4c618q2fl6dei0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ososchat",
+            "certificate_hash": "9940dd1dcfcdf1ddc5217c494389356e0d676599"
+          }
+        },
+        {
+          "client_id": "458036563594-ogm47i0eup1lgutulnuf89jmebdc3t66.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_BDu6f4mULWTKIt48iYNpTSsClduukeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458036563594-ogm47i0eup1lgutulnuf89jmebdc3t66.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

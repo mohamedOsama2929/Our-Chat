@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,10 +35,21 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = messageAdapter
         populateData()
+        // Write a message to the database
 
         button.setOnClickListener {
             val message = Message(text = editText.text.toString(), sendBy = "me")
             val sendMessageItem = SendMessageItem(message)
+            // Write a message to the database
+            val rootRef =
+                FirebaseDatabase.getInstance().reference
+            val cineIndustryRef =
+                rootRef.child("osos").push()
+            val key = cineIndustryRef.key
+            val map: MutableMap<String?, Any> =
+                HashMap()
+            map[key] = editText.text.toString()
+            cineIndustryRef.updateChildren(map)
 
             messageAdapter.add(sendMessageItem)
             recyclerView.scrollToPosition(messageAdapter.itemCount - 1)
