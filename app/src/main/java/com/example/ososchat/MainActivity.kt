@@ -2,13 +2,18 @@ package com.example.ososchat
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +26,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val messageAdapter = GroupAdapter<GroupieViewHolder>()
+
+    lateinit var user: FirebaseUser
+    val rootRef =
+        FirebaseDatabase.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,19 +45,24 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = messageAdapter
         populateData()
         // Write a message to the database
+        if (!intent.extras?.isEmpty!!) {
+//            user= Gson().fromJson(intent.getStringExtra("user"), FirebaseUser::class.java)
+        }
 
         button.setOnClickListener {
-            val message = Message(text = editText.text.toString(), sendBy = "me")
+            val message = Message(
+                text = editText.text.toString(),
+                sendBy = user.displayName.toString()
+            )
             val sendMessageItem = SendMessageItem(message)
             // Write a message to the database
-            val rootRef =
-                FirebaseDatabase.getInstance().reference
+
             val cineIndustryRef =
-                rootRef.child("osos").push()
+                rootRef.child("chat").push()
             val key = cineIndustryRef.key
             val map: MutableMap<String?, Any> =
                 HashMap()
-            map[key] = editText.text.toString()
+            map[key] = editText.text.toString() + " " + message.sendBy
             cineIndustryRef.updateChildren(map)
 
             messageAdapter.add(sendMessageItem)
@@ -58,12 +72,33 @@ class MainActivity : AppCompatActivity() {
             receiveAutoResponse()
             hideKeyboard()
         }
+
+
+        listenToFireBase()
+    }
+
+    private fun listenToFireBase() {
+        // Read from the database
+        // Read from the database
+        rootRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                // val value = dataSnapshot.getValue(String::class.java)
+                Log.e("TAG", "Value is: ${dataSnapshot.value}")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.e("TAG", "Failed to read value.", error.toException())
+            }
+        })
     }
 
     private fun populateData() {
         val data = listOf<Message>()
         data.forEach {
-            if (it.sendBy == "me") {
+            if (it.sendBy == user.displayName.toString()) {
                 messageAdapter.add(SendMessageItem(it))
             } else {
                 messageAdapter.add(ReceiveMessageItem(it))
