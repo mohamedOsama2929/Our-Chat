@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         linearLayoutManager.stackFromEnd = true
+        linearLayoutManager.isSmoothScrollbarEnabled = true
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = messageAdapter
         populateData()
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 //            user= Gson().fromJson(intent.getStringExtra("user"), FirebaseUser::class.java)
         }
 
+        user = FirebaseAuth.getInstance().currentUser!!
         button.setOnClickListener {
             val message = Message(
                 text = editText.text.toString(),
